@@ -1,20 +1,42 @@
 import 'package:flutter/material.dart';
 import '../interface/station.dart';
 
-class StationItem extends StatelessWidget {
+class ItemStation extends StatelessWidget {
   final Station station;
+  final bool isFavorite;
+  final VoidCallback onFavoriteToggle;
 
-  const StationItem({super.key, required this.station});
+  const ItemStation({
+    super.key,
+    required this.station,
+    required this.isFavorite,
+    required this.onFavoriteToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ListTile(
-        title: Text(station.name),
+        title: Text(
+          station.name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Text("Kode: ${station.id} | Type: ${station.type}"),
-        trailing: Icon(
-          station.active ? Icons.check_circle : Icons.cancel,
-          color: station.active ? Colors.green : Colors.red,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              station.active ? Icons.check_circle : Icons.cancel,
+              color: station.active ? Colors.green : Colors.red,
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+              color: isFavorite ? Colors.amber : Colors.grey,
+              onPressed: onFavoriteToggle,
+            ),
+          ],
         ),
       ),
     );

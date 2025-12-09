@@ -14,12 +14,14 @@ class Station {
   });
 
   factory Station.fromJson(Map<String, dynamic> json) {
+    final meta = json['metadata'] as Map<String, dynamic>?;
+
     return Station(
-      uid: json["uid"],
-      id: json["id"],
-      name: json["name"],
-      type: json["type"],
-      active: json["metadata"]["active"],
+      uid: (json['uid'] ?? '').toString(),
+      id: (json['id'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+      type: (json['type'] ?? '').toString(),
+      active: (meta?['active'] as bool?) ?? false,
     );
   }
 }
