@@ -26,10 +26,6 @@ class ItemStation extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              station.active ? Icons.check_circle : Icons.cancel,
-              color: station.active ? Colors.green : Colors.red,
-            ),
             const SizedBox(width: 8),
             IconButton(
               icon: Icon(isFavorite ? Icons.star : Icons.star_border),
