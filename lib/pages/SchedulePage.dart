@@ -28,10 +28,7 @@ class _SchedulePageState extends State<SchedulePage> {
         backgroundColor: const Color(0xFFF9F4FF),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text(
-          "Jadwal",
-          style: TextStyle(color: Colors.black),
-        ),
+        title: const Text("Jadwal", style: TextStyle(color: Colors.black)),
       ),
       body: FutureBuilder<List<Schedule>>(
         future: scheduleFuture,
@@ -48,37 +45,46 @@ class _SchedulePageState extends State<SchedulePage> {
           final allSchedules = snapshot.data ?? [];
           final now = DateTime.now();
 
-          // filter: pakai JAM dari departs_at, abaikan tanggal
-          final schedulesToShow = allSchedules.where((s) {
-            final localTime = s.departsAt.toLocal();
+          // batas 1 jam ke depan
+          final oneHourLater = now.add(const Duration(hours: 1));
 
-            final departToday = DateTime(
-              now.year,
-              now.month,
-              now.day,
-              localTime.hour,
-              localTime.minute,
-              localTime.second,
+          final schedulesToShow =
+              allSchedules.where((s) {
+                final localTime = s.departsAt.toLocal();
+
+                // Buat DateTime sesuai hari ini (karena tanggal API tidak relevan)
+                final departToday = DateTime(
+                  now.year,
+                  now.month,
+                  now.day,
+                  localTime.hour,
+                  localTime.minute,
+                  localTime.second,
+                );
+
+                return departToday.isAfter(now) &&
+                    departToday.isBefore(oneHourLater);
+              }).toList()..sort((a, b) {
+                final ta = a.departsAt.toLocal();
+                final tb = b.departsAt.toLocal();
+                return ta.compareTo(tb);
+              });
+
+          if (schedulesToShow.isEmpty) {
+            return const Center(
+              child: Text("Tidak ada jadwal dalam 1 jam ke depan."),
             );
-
-            final endOfDay =
-                DateTime(now.year, now.month, now.day, 23, 59, 59);
-
-            return departToday.isAfter(now) && departToday.isBefore(endOfDay);
-          }).toList()
-            ..sort((a, b) {
-              final ta = a.departsAt.toLocal();
-              final tb = b.departsAt.toLocal();
-              return ta.compareTo(tb);
-            });
+          }
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // header "Stasiun / Tambun"
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -94,8 +100,11 @@ class _SchedulePageState extends State<SchedulePage> {
                       widget.station.name
                           .toLowerCase()
                           .split(' ')
-                          .map((w) =>
-                              w.isEmpty ? '' : '${w[0].toUpperCase()}${w.substring(1)}')
+                          .map(
+                            (w) => w.isEmpty
+                                ? ''
+                                : '${w[0].toUpperCase()}${w.substring(1)}',
+                          )
                           .join(' '),
                       style: const TextStyle(
                         fontSize: 24,
@@ -258,10 +267,7 @@ class _ScheduleItem extends StatelessWidget {
                 children: [
                   Text(
                     "Berangkat pukul",
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey.shade700,
-                    ),
+                    style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -274,10 +280,7 @@ class _ScheduleItem extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     _remainingText(departToday),
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey.shade700,
-                    ),
+                    style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
                   ),
                 ],
               ),
