@@ -3,6 +3,7 @@ import '../interface/station.dart';
 import '../services/StationService.dart';
 import '../components/ItemStation.dart';
 import '../utils/FavoriteStorage.dart';
+import 'SchedulePage.dart';
 
 class StationPage extends StatefulWidget {
   const StationPage({super.key});
@@ -92,8 +93,10 @@ class _StationPageState extends State<StationPage> {
                     borderRadius: BorderRadius.circular(24),
                   ),
                   isDense: true,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                 ),
               ),
             ),
@@ -116,8 +119,15 @@ class _StationPageState extends State<StationPage> {
                         return ItemStation(
                           station: station,
                           isFavorite: isFav,
-                          onFavoriteToggle: () =>
-                              _toggleFavorite(station.id),
+                          onFavoriteToggle: () => _toggleFavorite(station.id),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => SchedulePage(station: station),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

@@ -5,12 +5,14 @@ class ItemStation extends StatelessWidget {
   final Station station;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
+  final VoidCallback? onTap;
 
   const ItemStation({
     super.key,
     required this.station,
     required this.isFavorite,
     required this.onFavoriteToggle,
+    this.onTap,
   });
 
   @override
@@ -18,6 +20,7 @@ class ItemStation extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ListTile(
+        onTap: onTap,
         title: Text(
           station.name,
           style: const TextStyle(fontWeight: FontWeight.bold),

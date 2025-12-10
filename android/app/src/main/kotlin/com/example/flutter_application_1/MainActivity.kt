@@ -1,4 +1,4 @@
-package com.example.comuline_flutter
+package com.example.ComeKRL
 
 import io.flutter.embedding.android.FlutterActivity
 
